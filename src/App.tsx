@@ -29,9 +29,9 @@ function Header() {
           animate={{ opacity: 1 }}
           className="flex items-center gap-2 font-mono text-sm tracking-tighter"
         >
-          <span className="text-[#00FF00] font-bold">r0075h3ll</span>
+          <span className="text-[#00FF00] font-bold">thetechnofeak</span>
           <span className="text-white/20">|</span>
-          <span className="text-white/40 uppercase tracking-widest text-[10px]">Hardik Nanda</span>
+          <span className="text-white/40 uppercase tracking-widest text-[10px]">Abhishek Shukla</span>
         </motion.div>
         <div className="hidden md:flex items-center gap-8 text-[10px] font-mono uppercase tracking-[0.2em] text-white/40">
           {["About", "Work", "Skills", "Certifications", "Contact"].map((item) => (

@@ -270,7 +270,7 @@ function Projects() {
 
 const SKILLS = [
   { category: "Application Security", items: ["SAST", "DAST", "SCA", "Threat Modeling", "OWASP Top 10", "Secure SDLC", "Vulnerability Management"] },
-  { category : "Security Operations", items: [ "Threat Detection & Analysis", "Incident Response", "Log Analysis", "Vulnerability Assessment","Kill Chain Analysis", "MITRE ATT&CK", "Threat Intelligence", "NIST Framework", "ISO 27001" ] }
+  { category : "Security Operations", items: [ "Threat Detection & Analysis", "Incident Response", "Log Analysis", "Vulnerability Assessment","Kill Chain Analysis", "MITRE ATT&CK", "Threat Intelligence", "NIST Framework", "ISO 27001" ] },
   { category: "Tooling", items: ["Semgrep", " SIEM", " EDR/XDR ", " SentinelOne", " Metasploit", " Nessus ", "Nmap ", "Burp Suite", " SOAR", " AD"] },
   { category: "Infrastructure", items: ["AWS", "Terraform", "GitHub Actions", "Docker", "DevSecOps", "Jenkins"] },
   { category: "Languages", items: ["Python", "Go", "JavaScript", "Bash", "Solidity"] },
@@ -329,7 +329,7 @@ function Certifications() {
             className="group p-8 border border-[#1F1F1F] bg-[#0A0A0A] hover:border-[#00FF00]/40 transition-all relative overflow-hidden flex items-center justify-between"
           >
             <div>
-              <div className="text-[10px] font-mono text-[#00FF00] mb-2 uppercase tracking-widest">Heath Adams(Cybermentor)</div>
+              <div className="text-[10px] font-mono text-[#00FF00] mb-2 uppercase tracking-widest">Cybermentor</div>
               <h4 className="text-2xl font-bold group-hover:text-[#00FF00] transition-colors">Tcm Security</h4>
               <p className="text-sm text-white/40 mt-2">Practical Ethical Hacking</p>
             </div>

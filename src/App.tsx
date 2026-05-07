@@ -185,37 +185,37 @@ const PROJECTS = [
     title: "vet",
     description: "Policy-driven vetting of open-source dependencies. Significant contributor to the safedep/vet ecosystem.",
     tags: ["Supply Chain", "Security", "Go"],
-    link: "https://github.com/safedep/vet"
+    link: ""
   },
   {
     title: "malcontent",
     description: "Advanced supply chain attack detection and malware analysis. Contributor to the chainguard-dev/malcontent project.",
     tags: ["Malware", "Detection", "Security"],
-    link: "https://github.com/chainguard-dev/malcontent"
+    link: ""
   },
   {
     title: "FireEye",
     description: "AWS Monitoring Toolkit for enterprise-grade threat detection and cloud security analysis.",
     tags: ["AWS", "Cloud Security", "Python"],
-    link: "https://github.com/r0075h3ll/FireEye"
+    link: ""
   },
   {
     title: "Oralyzer",
     description: "Open Redirect Analyzer - A tool to identify open redirect vulnerabilities in web applications.",
     tags: ["Web Security", "Bug Bounty", "Python"],
-    link: "https://github.com/r0075h3ll/Oralyzer"
+    link: ""
   },
   {
     title: "Endomorph",
     description: "Command-line utility for endianness conversion written in C.",
     tags: ["C", "CLI", "Low-level"],
-    link: "https://github.com/r0075h3ll/Endomorph"
+    link: ""
   },
   {
     title: "semgrep-rules",
     description: "Custom Semgrep rules registry for identifying security vulnerabilities in source code.",
     tags: ["SAST", "Semgrep", "Automation"],
-    link: "https://github.com/r0075h3ll/semgrep-rules"
+    link: ""
   }
 ];
 
@@ -398,7 +398,7 @@ function Contact() {
         </h3>
         <div className="flex flex-col items-center gap-8">
           <motion.a 
-            href="mailto:hnanda21@gmail.com" 
+            href="mailto:ashikla693@gmail.com" 
             whileHover={{ scale: 1.05 }}
             className="text-2xl md:text-4xl font-mono font-bold text-[#00FF00] border-b-2 border-[#00FF00]/20 pb-2"
           >

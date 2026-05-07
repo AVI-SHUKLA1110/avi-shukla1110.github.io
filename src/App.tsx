@@ -402,7 +402,7 @@ function Contact() {
             whileHover={{ scale: 1.05 }}
             className="text-2xl md:text-4xl font-mono font-bold text-[#00FF00] border-b-2 border-[#00FF00]/20 pb-2"
           >
-            hnanda21@gmail.com
+            ashikla693@gmail.com
           </motion.a>
           <div className="flex gap-8 text-[10px] font-mono uppercase tracking-[0.3em] text-white/40">
             <a href="https://github.com/AVI-SHUKLA1110" target="_blank" rel="noopener noreferrer" className="hover:text-[#00FF00] transition-colors">GitHub</a>

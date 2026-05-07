@@ -270,7 +270,7 @@ function Projects() {
 
 const SKILLS = [
   { category: "Application Security", items: ["SAST", "DAST", "SCA", "Threat Modeling", "OWASP Top 10", "Secure SDLC", "Vulnerability Management"] },
-  { category : "Security Operations", items: [ "Threat Detection & Analysis", "Incident Response", "Log Analysis", "Vulnerability Assessment","Kill Chain Analysis", "MITRE ATT&CK", "Threat Intelligence", "NIST Framework", "ISO 27001" ] },
+  { category : "Security Operations", items: [ "Threat Detection & Analysis", "Incident Response", "Vulnerability Assessment","Kill Chain Analysis", "MITRE ATT&CK", "NIST Framework", "ISO 27001" ] },
   { category: "Tooling", items: ["Semgrep", " SIEM", " EDR/XDR ", " SentinelOne", " Metasploit", " Nessus ", "Nmap ", "Burp Suite", " SOAR", " AD"] },
   { category: "Infrastructure", items: ["AWS", "Terraform", "GitHub Actions", "Docker", "DevSecOps", "Jenkins"] },
   { category: "Languages", items: ["Python", "Go", "JavaScript", "Bash", "Solidity"] },

@@ -288,22 +288,6 @@ function Certifications() {
         </div>
         <div className="grid md:grid-cols-2 gap-6">
           <motion.a
-            href="https://www.udemy.com/certificate/UC-28d3fc91-5494-4f51-aef8-9b364c6523d8/"
-            target="_blank"
-            rel="noopener noreferrer"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="group p-8 border border-[#1F1F1F] bg-[#0A0A0A] hover:border-[#00FF00]/40 transition-all relative overflow-hidden flex items-center justify-between"
-          >
-            <div>
-              <div className="text-[10px] font-mono text-[#00FF00] mb-2 uppercase tracking-widest"></div>
-              <h4 className="text-2xl font-bold group-hover:text-[#00FF00] transition-colors">Burpsuite Deep Dive</h4>
-              <p className="text-sm text-white/40 mt-2"></p>
-            </div>
-            <ExternalLink className="w-6 h-6 text-white/20 group-hover:text-[#00FF00] transition-colors" />
-          </motion.a>
-          <motion.a
             href="https://www.credly.com/badges/13189836-8258-4550-80e1-2cdedddc093e/public_url/"
             target="_blank"
             rel="noopener noreferrer"
@@ -332,6 +316,22 @@ function Certifications() {
               <div className="text-[10px] font-mono text-[#00FF00] mb-2 uppercase tracking-widest">Cybermentor</div>
               <h4 className="text-2xl font-bold group-hover:text-[#00FF00] transition-colors">Tcm Security</h4>
               <p className="text-sm text-white/40 mt-2">Practical Ethical Hacking</p>
+            </div>
+            <ExternalLink className="w-6 h-6 text-white/20 group-hover:text-[#00FF00] transition-colors" />
+          </motion.a>
+          <motion.a
+            href="https://www.udemy.com/certificate/UC-28d3fc91-5494-4f51-aef8-9b364c6523d8/"
+            target="_blank"
+            rel="noopener noreferrer"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="group p-8 border border-[#1F1F1F] bg-[#0A0A0A] hover:border-[#00FF00]/40 transition-all relative overflow-hidden flex items-center justify-between"
+          >
+            <div>
+              <div className="text-[10px] font-mono text-[#00FF00] mb-2 uppercase tracking-widest"><Udemy></Udemy></div>
+              <h4 className="text-2xl font-bold group-hover:text-[#00FF00] transition-colors">Burpsuite Deep Dive</h4>
+              <p className="text-sm text-white/40 mt-2"></p>
             </div>
             <ExternalLink className="w-6 h-6 text-white/20 group-hover:text-[#00FF00] transition-colors" />
           </motion.a>

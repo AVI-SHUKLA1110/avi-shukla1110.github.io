@@ -329,7 +329,7 @@ function Certifications() {
             className="group p-8 border border-[#1F1F1F] bg-[#0A0A0A] hover:border-[#00FF00]/40 transition-all relative overflow-hidden flex items-center justify-between"
           >
             <div>
-              <div className="text-[10px] font-mono text-[#00FF00] mb-2 uppercase tracking-widest"><Udemy></Udemy></div>
+              <div className="text-[10px] font-mono text-[#00FF00] mb-2 uppercase tracking-widest">Udemy</div>
               <h4 className="text-2xl font-bold group-hover:text-[#00FF00] transition-colors">Burpsuite Deep Dive</h4>
               <p className="text-sm text-white/40 mt-2"></p>
             </div>

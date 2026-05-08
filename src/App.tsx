@@ -264,7 +264,7 @@ function ResumeSection() {
             Get the latest version of my resume in PDF format. Perfect for recruiters, hiring managers, and collaborators looking to review my security experience.
           </p>
           <a
-            href="./resume.pdf"
+            href="./Abhishek_Shukla_Cybersecurity_Resume.pdf"
             download
             className="inline-flex items-center justify-center rounded-sm border border-[#00FF00] bg-[#00FF00]/10 px-8 py-3 text-[11px] font-bold uppercase tracking-widest text-[#00FF00] hover:bg-[#00FF00]/20 transition-colors"
           >

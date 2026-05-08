@@ -1,22 +1,420 @@
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { motion } from "motion/react";
 import { Github, Twitter, Linkedin, Shield, Terminal, ExternalLink } from "lucide-react";
 
+const blogPages = import.meta.glob("./blogs/*.md", { as: "raw" });
+
+type BlogPostEntry = {
+  slug: string;
+  title: string;
+  loader: () => Promise<string>;
+};
+
+type RouteState =
+  | { type: "home" }
+  | { type: "blogs" }
+  | { type: "blog"; slug: string };
+
+function slugToTitle(slug: string) {
+  return slug
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (match) => match.toUpperCase());
+}
+
+function parseHashRoute(hash: string): RouteState {
+  const cleaned = hash.replace(/^#\/?/, "").replace(/\/$/, "");
+  if (!cleaned) return { type: "home" };
+  if (cleaned === "blogs") return { type: "blogs" };
+  const parts = cleaned.split("/");
+  if (parts[0] === "blog" && parts[1]) {
+    return { type: "blog", slug: parts[1] };
+  }
+  return { type: "home" };
+}
+
+function renderMarkdown(text: string) {
+  const lines = text.replace(/\r\n/g, "\n").split("\n");
+  const nodes: ReactNode[] = [];
+  let paragraphLines: string[] = [];
+  let listItems: string[] = [];
+  let codeLines: string[] = [];
+
+  const flushParagraph = () => {
+    if (!paragraphLines.length) return;
+    const content = paragraphLines.join(" ").trim();
+    nodes.push(
+      <p key={nodes.length} className="text-white/80 leading-relaxed mb-6">
+        {parseInlineMarkdown(content)}
+      </p>,
+    );
+    paragraphLines = [];
+  };
+
+  const flushList = () => {
+    if (!listItems.length) return;
+    nodes.push(
+      <ul key={nodes.length} className="list-disc list-inside text-white/80 mb-6 space-y-2">
+        {listItems.map((item, index) => (
+          <li key={index}>{parseInlineMarkdown(item)}</li>
+        ))}
+      </ul>,
+    );
+    listItems = [];
+  };
+
+  const flushCode = () => {
+    if (!codeLines.length) return;
+    nodes.push(
+      <pre key={nodes.length} className="mb-6 overflow-auto rounded-lg border border-white/10 bg-[#070707] p-4 text-sm text-white/80">
+        <code>{codeLines.join("\n")}</code>
+      </pre>,
+    );
+    codeLines = [];
+  };
+
+  for (const line of lines) {
+    if (codeLines.length > 0) {
+      if (line.trim() === "```") {
+        flushCode();
+        continue;
+      }
+      codeLines.push(line);
+      continue;
+    }
+
+    if (line.trim().startsWith("```") && codeLines.length === 0) {
+      flushParagraph();
+      flushList();
+      codeLines = [];
+      continue;
+    }
+
+    if (line.trim() === "```") {
+      flushParagraph();
+      flushList();
+      codeLines = [];
+      continue;
+    }
+
+    const headingMatch = line.match(/^(#{1,6})\s+(.*)$/);
+    if (headingMatch) {
+      flushParagraph();
+      flushList();
+      const level = Math.min(headingMatch[1].length, 6);
+      const text = parseInlineMarkdown(headingMatch[2]);
+      const key = nodes.length;
+      if (level === 1) {
+        nodes.push(
+          <h1 key={key} className="text-white font-bold mb-6 leading-tight">
+            {text}
+          </h1>,
+        );
+      } else if (level === 2) {
+        nodes.push(
+          <h2 key={key} className="text-white font-bold mb-6 leading-tight">
+            {text}
+          </h2>,
+        );
+      } else if (level === 3) {
+        nodes.push(
+          <h3 key={key} className="text-white font-bold mb-6 leading-tight">
+            {text}
+          </h3>,
+        );
+      } else if (level === 4) {
+        nodes.push(
+          <h4 key={key} className="text-white font-bold mb-6 leading-tight">
+            {text}
+          </h4>,
+        );
+      } else if (level === 5) {
+        nodes.push(
+          <h5 key={key} className="text-white font-bold mb-6 leading-tight">
+            {text}
+          </h5>,
+        );
+      } else {
+        nodes.push(
+          <h6 key={key} className="text-white font-bold mb-6 leading-tight">
+            {text}
+          </h6>,
+        );
+      }
+      continue;
+    }
+
+    const listMatch = line.match(/^[-*]\s+(.*)$/);
+    if (listMatch) {
+      flushParagraph();
+      listItems.push(listMatch[1]);
+      continue;
+    }
+
+    if (!line.trim()) {
+      flushParagraph();
+      flushList();
+      continue;
+    }
+
+    paragraphLines.push(line);
+  }
+
+  flushParagraph();
+  flushList();
+  flushCode();
+
+  return <div className="prose prose-invert max-w-none">{nodes}</div>;
+}
+
+function parseInlineMarkdown(text: string) {
+  const parts: Array<string | ReactNode> = [];
+  const regex = /\[(.+?)\]\((.+?)\)/g;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = regex.exec(text)) !== null) {
+    const [full, label, href] = match;
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    parts.push(
+      <a
+        key={`${label}-${href}-${match.index}`}
+        href={href}
+        target="_blank"
+        rel="noreferrer"
+        className="text-[#00FF00] underline"
+      >
+        {label}
+      </a>,
+    );
+    lastIndex = match.index + full.length;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return parts;
+}
+
 export default function App() {
+  const [route, setRoute] = useState<RouteState>(parseHashRoute(window.location.hash));
+  const blogPosts = useMemo<BlogPostEntry[]>(() => {
+    return Object.entries(blogPages)
+      .map(([path, loader]) => {
+        const slug = path.split("/").pop()?.replace(/\.md$/, "") ?? "unknown";
+        return {
+          slug,
+          title: slugToTitle(slug),
+          loader: loader as () => Promise<string>,
+        };
+      })
+      .sort((a, b) => a.slug.localeCompare(b.slug));
+  }, []);
+
+  useEffect(() => {
+    const handleHashChange = () => setRoute(parseHashRoute(window.location.hash));
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white selection:bg-[#00FF00] selection:text-black font-sans relative">
       <div className="fixed inset-0 grid-bg pointer-events-none opacity-20" />
       <div className="fixed inset-0 scanline pointer-events-none" />
       <Header />
       <main className="relative z-10">
-        <Hero />
-        <About />
-        <Projects />
-        <Expertise />
-        <Certifications />
-        <Contact />
+        {route.type === "home" ? (
+          <HomeContent blogPosts={blogPosts} />
+        ) : route.type === "blogs" ? (
+          <BlogListPage posts={blogPosts} />
+        ) : (
+          <BlogPostPage post={blogPosts.find((item) => item.slug === route.slug)} />
+        )}
       </main>
       <Footer />
     </div>
+  );
+}
+
+function HomeContent({ blogPosts }: { blogPosts: BlogPostEntry[] }) {
+  return (
+    <>
+      <Hero />
+      <About />
+      <ResumeSection />
+      <BlogSection blogPosts={blogPosts} />
+      <Projects />
+      <Expertise />
+      <Certifications />
+      <Contact />
+    </>
+  );
+}
+
+function ResumeSection() {
+  return (
+    <section className="py-32 px-6 border-b border-[#1F1F1F] bg-[#0F0F0F]">
+      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <h2 className="text-[10px] uppercase tracking-[0.4em] text-[#00FF00] mb-4 font-mono">/ Resume</h2>
+          <h3 className="text-4xl md:text-5xl font-bold tracking-tighter mb-6">Download my CV.</h3>
+          <p className="max-w-xl text-lg text-white/40 leading-relaxed mb-8">
+            Get the latest version of my resume in PDF format. Perfect for recruiters, hiring managers, and collaborators looking to review my security experience.
+          </p>
+          <a
+            href="./resume.pdf"
+            download
+            className="inline-flex items-center justify-center rounded-sm border border-[#00FF00] bg-[#00FF00]/10 px-8 py-3 text-[11px] font-bold uppercase tracking-widest text-[#00FF00] hover:bg-[#00FF00]/20 transition-colors"
+          >
+            Download CV
+          </a>
+        </div>
+        <div className="p-8 border border-[#1F1F1F] bg-[#0A0A0A] rounded-lg">
+          <div className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/20 mb-6">Latest Resume</div>
+          <div className="grid gap-4 text-white/60 text-sm">
+            <div>
+              <span className="font-medium text-white">Title:</span> Security Engineer Resume
+            </div>
+            <div>
+              <span className="font-medium text-white">Format:</span> PDF
+            </div>
+            <div>
+              <span className="font-medium text-white">Ready for:</span> Applications, recruiters, and emergency reviews.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BlogSection({ blogPosts }: { blogPosts: BlogPostEntry[] }) {
+  return (
+    <section id="blogs" className="py-32 px-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+          <div>
+            <h2 className="text-[10px] uppercase tracking-[0.4em] text-[#00FF00] mb-4 font-mono">/ Blog</h2>
+            <h3 className="text-4xl md:text-5xl font-bold tracking-tighter">Security writing and research.</h3>
+          </div>
+          <a
+            href="#blogs"
+            className="self-start rounded-sm border border-[#00FF00] px-6 py-3 text-[11px] font-bold uppercase tracking-widest text-[#00FF00] hover:bg-[#00FF00]/10 transition-colors"
+          >
+            View all blogs
+          </a>
+        </div>
+        <div className="grid md:grid-cols-2 gap-6">
+          {blogPosts.slice(0, 2).map((post, index) => (
+            <motion.a
+              key={post.slug}
+              href={`#blog/${post.slug}`}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              viewport={{ once: true }}
+              className="group p-8 border border-[#1F1F1F] bg-[#0A0A0A] hover:border-[#00FF00]/40 transition-all"
+            >
+              <div className="text-[10px] font-mono text-[#00FF00] mb-4 uppercase tracking-widest">Blog {index + 1}</div>
+              <h4 className="text-2xl font-bold mb-4 group-hover:text-[#00FF00] transition-colors">{post.title}</h4>
+              <p className="text-white/40 leading-relaxed mb-6">
+                Read my latest security insights, written as markdown so I can publish new content quickly.
+              </p>
+              <div className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.3em] text-[#00FF00] font-bold">
+                Open Post
+              </div>
+            </motion.a>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BlogListPage({ posts }: { posts: BlogPostEntry[] }) {
+  return (
+    <section className="pt-32 pb-20 px-6 min-h-screen">
+      <div className="max-w-6xl mx-auto">
+        <div className="mb-16">
+          <a href="#" className="text-sm font-mono uppercase tracking-[0.35em] text-white/40 hover:text-[#00FF00] transition-colors">
+            ← Back to portfolio
+          </a>
+          <h2 className="text-[10px] uppercase tracking-[0.4em] text-[#00FF00] mb-4 font-mono">/ Blog Archive</h2>
+          <h1 className="text-5xl md:text-6xl font-bold tracking-tighter">All blog posts.</h1>
+          <p className="max-w-2xl mt-6 text-white/40 leading-relaxed text-lg">
+            These posts are written in markdown and published directly from the repo. Click any entry to read the full write-up.
+          </p>
+        </div>
+        <div className="grid gap-6">
+          {posts.map((post) => (
+            <motion.a
+              key={post.slug}
+              href={`#blog/${post.slug}`}
+              whileHover={{ y: -2 }}
+              className="group block rounded-xl border border-[#1F1F1F] bg-[#0A0A0A] p-8 transition-all hover:border-[#00FF00]/40"
+            >
+              <div className="flex items-center justify-between gap-4 mb-3">
+                <span className="text-[10px] uppercase tracking-[0.3em] text-[#00FF00] font-mono">Article</span>
+                <span className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-mono">{post.slug}</span>
+              </div>
+              <h3 className="text-3xl font-bold mb-4 group-hover:text-[#00FF00] transition-colors">{post.title}</h3>
+              <p className="text-white/50">Published directly from markdown sources in the repo.</p>
+            </motion.a>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BlogPostPage({ post }: { post?: BlogPostEntry }) {
+  const [content, setContent] = useState<string>("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!post) return;
+    setLoading(true);
+    post.loader().then((text) => {
+      setContent(text);
+      setLoading(false);
+    });
+  }, [post]);
+
+  if (!post) {
+    return (
+      <section className="pt-32 pb-20 px-6 min-h-screen">
+        <div className="max-w-5xl mx-auto text-center">
+          <a href="#blogs" className="text-sm font-mono uppercase tracking-[0.35em] text-white/40 hover:text-[#00FF00] transition-colors">
+            ← Back to blog list
+          </a>
+          <h1 className="text-5xl font-bold tracking-tighter mt-10">Blog post not found</h1>
+          <p className="mt-6 text-white/40">The requested blog was not found in the repository. Please return to the blog archive.</p>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="pt-32 pb-20 px-6 min-h-screen">
+      <div className="max-w-5xl mx-auto">
+        <a href="#blogs" className="text-sm font-mono uppercase tracking-[0.35em] text-white/40 hover:text-[#00FF00] transition-colors">
+          ← Back to blog list
+        </a>
+        <div className="mt-12 mb-10">
+          <div className="text-[10px] uppercase tracking-[0.4em] text-[#00FF00] mb-4 font-mono">/ Blog Post</div>
+          <h1 className="text-5xl md:text-6xl font-bold tracking-tighter">{post.title}</h1>
+        </div>
+        <div className="rounded-3xl border border-[#1F1F1F] bg-[#0A0A0A] p-10">
+          {loading ? (
+            <div className="text-white/50">Loading blog content...</div>
+          ) : (
+            renderMarkdown(content)
+          )}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -34,10 +432,10 @@ function Header() {
           <span className="text-white/40 uppercase tracking-widest text-[10px]">Abhishek Shukla</span>
         </motion.div>
         <div className="hidden md:flex items-center gap-8 text-[10px] font-mono uppercase tracking-[0.2em] text-white/40">
-          {["About", "Work", "Skills", "Certifications", "Contact"].map((item) => (
+          {["About", "Work", "Skills", "Certifications", "Blogs", "Contact"].map((item) => (
             <motion.a
               key={item}
-              href={`#${item === "Work" ? "work" : item.toLowerCase()}`}
+              href={`#${item === "Work" ? "work" : item === "Blogs" ? "blogs" : item.toLowerCase()}`}
               whileHover={{ color: "#00FF00" }}
               className="transition-colors"
             >
@@ -270,7 +668,7 @@ function Projects() {
 
 const SKILLS = [
   { category: "Application Security", items: ["SAST", "DAST", "SCA", "Threat Modeling", "OWASP Top 10", "Secure SDLC", "Vulnerability Management"] },
-  { category : "Security Operations", items: [ "Threat Detection & Analysis", "Incident Response", "Vulnerability Assessment","Kill Chain Analysis", "MITRE ATT&CK", "NIST Framework", "ISO 27001" ] },
+  { category : "Security Operations", items: [ "Threat Detection & Analysis", "Incident Response", "ISO 27001","Vulnerability Assessment","Kill Chain Analysis", "MITRE ATT&CK", "NIST Framework"] },
   { category: "Tooling", items: ["Semgrep", " SIEM", " EDR/XDR ", " SentinelOne", " Metasploit", " Nessus ", "Nmap ", "Burp Suite", " SOAR", " AD"] },
   { category: "Infrastructure", items: ["AWS", "Terraform", "GitHub Actions", "Docker", "DevSecOps", "Jenkins"] },
   { category: "Languages", items: ["Python", "Go", "JavaScript", "Bash", "Solidity"] },

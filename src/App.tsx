@@ -574,7 +574,7 @@ MTTR and harden infrastructure against evolving threats.
 
 const PROJECTS = [
   {
-     title: "vet",
+     title:"Vulnerable flash note app",
     description: "Devsecop CI/CD Secure pipeline.",
     tags: ["Supply Chain", "Security", "Python"],
     link: "#",

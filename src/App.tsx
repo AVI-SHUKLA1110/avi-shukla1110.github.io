@@ -562,12 +562,6 @@ function About() {
               I am a Security Analyst specialising in DevSecops and Product Security Engineering dedicated to identifying and mitigating security risks across the entire software development lifecycle. My work focuses on leveraging security automation and tooling to reduce
 MTTR and harden infrastructure against evolving threats.
             </p>
-            {/* <p>
-              I am the creator of original security tools like <span className="text-white font-medium">Oralyzer</span>, an open-redirect analyzer, and <span className="text-white font-medium">FireEye</span>, an AWS monitoring toolkit for threat detection.
-            </p>
-            <p>
-              With a deep interest in supply chain security, I am also a frequent contributor to critical open-source security tools like <span className="text-white font-medium">safedep/vet</span> and <span className="text-white font-medium">chainguard-dev/malcontent</span>, helping organizations vet their dependencies and detect malicious packages.
-            </p> */}
             <p>
               My philosophy is simple: <span className="text-[#00FF00] italic">Automate the known, investigate the unknown.</span> I believe in empowering developers with security tooling that is both powerful and seamless.
             </p>
@@ -578,93 +572,87 @@ MTTR and harden infrastructure against evolving threats.
   );
 }
 
-// const PROJECTS = [
-//   {
-//     title: "vet",
-//     description: "Policy-driven vetting of open-source dependencies. Significant contributor to the safedep/vet ecosystem.",
-//     tags: ["Supply Chain", "Security", "Go"],
-//     link: ""
-//   },
-//   {
-//     title: "malcontent",
-//     description: "Advanced supply chain attack detection and malware analysis. Contributor to the chainguard-dev/malcontent project.",
-//     tags: ["Malware", "Detection", "Security"],
-//     link: ""
-//   },
-//   {
-//     title: "FireEye",
-//     description: "AWS Monitoring Toolkit for enterprise-grade threat detection and cloud security analysis.",
-//     tags: ["AWS", "Cloud Security", "Python"],
-//     link: ""
-//   },
-//   {
-//     title: "Oralyzer",
-//     description: "Open Redirect Analyzer - A tool to identify open redirect vulnerabilities in web applications.",
-//     tags: ["Web Security", "Bug Bounty", "Python"],
-//     link: ""
-//   },
-//   {
-//     title: "Endomorph",
-//     description: "Command-line utility for endianness conversion written in C.",
-//     tags: ["C", "CLI", "Low-level"],
-//     link: ""
-//   },
-//   {
-//     title: "semgrep-rules",
-//     description: "Custom Semgrep rules registry for identifying security vulnerabilities in source code.",
-//     tags: ["SAST", "Semgrep", "Automation"],
-//     link: ""
-//   }
-// ];
+const PROJECTS = [
+  {
+     title: "vet",
+    description: "Devsecop CI/CD Secure pipeline.",
+    tags: ["Supply Chain", "Security", "Python"],
+    link: "#",
+  },
+  {
+    title: "MCP Hacking server",
+    description: "Hacking MCP server built on docker utilising vulnerality scanning tools",
+    tags: ["Malware", "Detection", "Security"],
+    link: "#",
+  },
+];
 
-// function Projects() {
-//   return (
-//     <section id="work" className="py-32 px-6">
-//       <div className="max-w-7xl mx-auto">
-//         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-//           <div>
-//             <h2 className="text-[10px] uppercase tracking-[0.4em] text-[#00FF00] mb-4 font-mono">/ Work Done</h2>
-//             <h3 className="text-4xl md:text-5xl font-bold tracking-tighter">Selected Contributions.</h3>
-//           </div>
-//           <p className="max-w-xs text-white/40 text-[11px] leading-relaxed font-mono uppercase tracking-wider">
-//             A collection of open-source tools and security projects focused on securing the modern software supply chain.
-//           </p>
-//         </div>
-//         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-//           {PROJECTS.map((project, i) => (
-//             <motion.a
-//               key={project.title}
-//               href={project.link}
-//               target="_blank"
-//               rel="noopener noreferrer"
-//               initial={{ opacity: 0, y: 20 }}
-//               whileInView={{ opacity: 1, y: 0 }}
-//               transition={{ delay: i * 0.1 }}
-//               viewport={{ once: true }}
-//               className="group p-6 border border-[#1F1F1F] bg-[#0A0A0A] hover:border-[#00FF00]/40 transition-all relative overflow-hidden"
-//             >
-//               <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-//                 <ExternalLink className="w-4 h-4 text-[#00FF00]" />
-//               </div>
-//               <div className="text-[10px] font-mono text-white/20 mb-4 uppercase tracking-widest">Project 0{i + 1}</div>
-//               <h4 className="text-xl font-bold mb-3 group-hover:text-[#00FF00] transition-colors">{project.title}</h4>
-//               <p className="text-sm text-white/40 leading-relaxed mb-6 h-12 overflow-hidden">
-//                 {project.description}
-//               </p>
-//               <div className="flex flex-wrap gap-2">
-//                 {project.tags.map(tag => (
-//                   <span key={tag} className="text-[9px] font-mono px-2 py-0.5 border border-white/10 text-white/40 uppercase tracking-widest">
-//                     {tag}
-//                   </span>
-//                 ))}
-//               </div>
-//             </motion.a>
-//           ))}
-//         </div>
-//       </div>
-//     </section>
-//   );
-// }
+function Projects() {
+  return (
+    <section id="work" className="py-32 px-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <div>
+            <h2 className="text-[10px] uppercase tracking-[0.4em] text-[#00FF00] mb-4 font-mono">
+              / Work Done
+            </h2>
+            <h3 className="text-4xl md:text-5xl font-bold tracking-tighter">
+              Selected Contributions.
+            </h3>
+          </div>
+
+          <p className="max-w-xs text-white/40 text-[11px] leading-relaxed font-mono uppercase tracking-wider">
+            A collection of open-source tools and security projects focused on
+            securing the modern software supply chain.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {PROJECTS.map((project, i) => (
+            <motion.a
+              key={project.title}
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              viewport={{ once: true }}
+              className="group p-6 border border-[#1F1F1F] bg-[#0A0A0A] hover:border-[#00FF00]/40 transition-all relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                <ExternalLink className="w-4 h-4 text-[#00FF00]" />
+              </div>
+
+              <div className="text-[10px] font-mono text-white/20 mb-4 uppercase tracking-widest">
+                Project 0{i + 1}
+              </div>
+
+              <h4 className="text-xl font-bold mb-3 group-hover:text-[#00FF00] transition-colors">
+                {project.title}
+              </h4>
+
+              <p className="text-sm text-white/40 leading-relaxed mb-6 h-12 overflow-hidden">
+                {project.description}
+              </p>
+
+              <div className="flex flex-wrap gap-2">
+                {project.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-[9px] font-mono px-2 py-0.5 border border-white/10 text-white/40 uppercase tracking-widest"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </motion.a>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
 const SKILLS = [
   { category: "Application Security", items: ["SAST", "DAST", "SCA", "Threat Modeling", "OWASP Top 10", "Secure SDLC", "Vulnerability Management"] },
